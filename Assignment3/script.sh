@@ -13,5 +13,6 @@
 
 
 module load miniconda3
+module load seaborn
 
 python q2.py
