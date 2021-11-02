@@ -12,6 +12,7 @@
 #SBATCH --mail-type=END
 
 
-module load miniconda3
+module load python/3.9.2
+module load python-libs/3.0
 
 python q2.py
