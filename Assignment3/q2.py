@@ -19,10 +19,7 @@ from PIL import Image
 
 #!pip install tensorflow.io
 from tensorflow.keras.layers import *
-from tensorflow.keras import Model
 from tensorflow.keras.callbacks import ModelCheckpoint
-from tensorflow.keras import backend as K
-from tensorflow import keras
 from tensorflow.keras import layers
 
 EPOCHS=100
