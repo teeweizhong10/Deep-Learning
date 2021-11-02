@@ -20,7 +20,7 @@ from PIL import Image
 #!pip install tensorflow.io
 from tensorflow.keras.layers import *
 from tensorflow.keras.callbacks import ModelCheckpoint
-from tensorflow.keras import layers
+from tensorflow.python.keras import layers
 
 EPOCHS=100
 BATCH_SIZE=32
