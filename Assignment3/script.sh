@@ -14,5 +14,6 @@
 
 module load miniconda3
 module load seaborn
+module load Image
 
 python q2.py
