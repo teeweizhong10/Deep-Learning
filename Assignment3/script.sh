@@ -14,5 +14,6 @@
 
 module load python/3.9.2
 module load python-libs/3.0
+module load seaborn
 
 python q2.py
