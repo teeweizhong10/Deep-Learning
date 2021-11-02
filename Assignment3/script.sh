@@ -17,6 +17,8 @@ module load seaborn
 module load Image
 module load tensorflow
 module load tensorflow.io
-module load tensorflow.keras.
+module load tensorflow.keras
+module load tensorflow.keras.layers
+module load tensorflow.keras.callbacks
 
 python q2.py
