@@ -15,5 +15,8 @@
 module load miniconda3
 module load seaborn
 module load Image
+module load tensorflow
+module load tensorflow.io
+module load tensorflow.keras.
 
 python q2.py
