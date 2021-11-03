@@ -301,3 +301,157 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.savefig('Training_Loss.png')
 plt.clf()
+
+
+# ResUNet structure
+
+def resunet_model(output_channels: int):
+    # The encoder
+    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
+    f = [32, 64, 128, 256, 512]
+    kernel_size = (3, 3)
+    strides = 1
+    padding = "same"
+    ## Encoder
+
+    e1 = layers.Conv2D(f[0], kernel_size, padding=padding, strides=strides)(encoder_inputs)
+    e1 = layers.BatchNormalization()(e1)
+    e1 = layers.Activation("relu")(e1)
+    e1 = layers.Conv2D(f[0], kernel_size, padding=padding, strides=strides)(e1)
+    m1 = layers.MaxPool2D(pool_size=(2, 2))(e1)
+
+    e2 = layers.Conv2D(f[1], kernel_size, padding=padding, strides=strides)(m1)
+    e2 = layers.BatchNormalization()(e2)
+    e2 = layers.Activation("relu")(e2)
+    e2 = layers.Conv2D(f[1], kernel_size, padding=padding, strides=strides)(e2)
+    m2 = layers.MaxPool2D(pool_size=(2, 2))(e2)
+
+    e3 = layers.Conv2D(f[2], kernel_size, padding=padding, strides=strides)(m2)
+    e3 = layers.BatchNormalization()(e3)
+    e3 = layers.Activation("relu")(e3)
+    e3 = layers.Conv2D(f[2], kernel_size, padding=padding, strides=strides)(e3)
+    m3 = layers.MaxPool2D(pool_size=(2, 2))(e3)
+
+    e4 = layers.Conv2D(f[3], kernel_size, padding=padding, strides=strides)(m3)
+    e4 = layers.BatchNormalization()(e4)
+    e4 = layers.Activation("relu")(e4)
+    e4 = layers.Conv2D(f[3], kernel_size, padding=padding, strides=strides)(e4)
+    m4 = layers.MaxPool2D(pool_size=(2, 2))(e4)
+
+    ## Bridge
+
+    b0 = layers.Conv2D(f[4], kernel_size, padding=padding, strides=strides)(m4)
+    b0 = layers.BatchNormalization()(b0)
+    b0 = layers.Activation("relu")(b0)
+
+    b1 = layers.Conv2D(f[4], kernel_size, padding=padding, strides=strides)(b0)
+    b1 = layers.BatchNormalization()(b1)
+    b1 = layers.Activation("relu")(b1)
+
+    ##Decoder
+
+    u1 = layers.UpSampling2D((2, 2))(b1)
+    u1 = layers.Conv2D(f[3], kernel_size, padding=padding, strides=strides)(u1)
+    u1 = layers.BatchNormalization()(u1)
+    u1 = layers.Activation("relu")(u1)
+    u1 = layers.Conv2D(f[3], kernel_size, padding=padding, strides=strides)(u1)
+    u1 = layers.Concatenate()([u1, e4])
+
+    c1 = layers.Conv2D(f[3], kernel_size, padding=padding, strides=strides)(u1)
+    c1 = layers.BatchNormalization()(c1)
+    c1 = layers.Activation("relu")(c1)
+
+    c1 = layers.Conv2D(f[3], kernel_size, padding=padding, strides=strides)(c1)
+    c1 = layers.BatchNormalization()(c1)
+    c1 = layers.Activation("relu")(c1)
+
+    #############################################
+
+    u2 = layers.UpSampling2D((2, 2))(c1)
+    u2 = layers.Conv2D(f[2], kernel_size, padding=padding, strides=strides)(u2)
+    u2 = layers.BatchNormalization()(u2)
+    u2 = layers.Activation("relu")(u2)
+    u2 = layers.Conv2D(f[2], kernel_size, padding=padding, strides=strides)(u2)
+    u2 = layers.Concatenate()([u2, e3])
+
+    c2 = layers.Conv2D(f[2], kernel_size, padding=padding, strides=strides)(u2)
+    c2 = layers.BatchNormalization()(c2)
+    c2 = layers.Activation("relu")(c2)
+
+    c2 = layers.Conv2D(f[2], kernel_size, padding=padding, strides=strides)(c2)
+    c2 = layers.BatchNormalization()(c2)
+    c2 = layers.Activation("relu")(c2)
+
+    #############################################
+
+    u3 = layers.UpSampling2D((2, 2))(c2)
+    u3 = layers.Conv2D(f[1], kernel_size, padding=padding, strides=strides)(u3)
+    u3 = layers.BatchNormalization()(u3)
+    u3 = layers.Activation("relu")(u3)
+    u3 = layers.Conv2D(f[1], kernel_size, padding=padding, strides=strides)(u3)
+    u3 = layers.Concatenate()([u3, e2])
+
+    c3 = layers.Conv2D(f[1], kernel_size, padding=padding, strides=strides)(u3)
+    c3 = layers.BatchNormalization()(c3)
+    c3 = layers.Activation("relu")(c3)
+
+    c3 = layers.Conv2D(f[1], kernel_size, padding=padding, strides=strides)(c3)
+    c3 = layers.BatchNormalization()(c3)
+    c3 = layers.Activation("relu")(c3)
+
+    ###############################################
+
+    u4 = layers.UpSampling2D((2, 2))(c3)
+    u4 = layers.Conv2D(f[0], kernel_size, padding=padding, strides=strides)(u4)
+    u4 = layers.BatchNormalization()(u4)
+    u4 = layers.Activation("relu")(u4)
+    u4 = layers.Conv2D(f[0], kernel_size, padding=padding, strides=strides)(u4)
+    u4 = layers.Concatenate()([u4, e1])
+
+    c4 = layers.Conv2D(f[0], kernel_size, padding=padding, strides=strides)(u4)
+    c4 = layers.BatchNormalization()(c4)
+    c4 = layers.Activation("relu")(c4)
+
+    c4 = layers.Conv2D(f[0], kernel_size, padding=padding, strides=strides)(c4)
+    c4 = layers.BatchNormalization()(c4)
+    c4 = layers.Activation("relu")(c4)
+
+    #####################################################
+
+    encoder_outputs = layers.Conv2D(output_channels, (1, 1), padding="same")(c4)
+    encoder = tf.keras.Model(inputs=encoder_inputs, outputs=c4, name="encoder")
+    return encoder
+
+model = resunet_model(output_channels=N_CLASSES)
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+TRAIN_STEPS = len(train_gen)
+VAL_STEPS = len(val_gen)
+
+checkpoint = ModelCheckpoint('seg_model.h5', monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=True)
+
+model.compile(optimizer="adam", loss='sparse_categorical_crossentropy', metrics=["acc"])
+history = model.fit(train_gen, validation_data=val_gen, steps_per_epoch=TRAIN_STEPS,
+          validation_steps=VAL_STEPS, epochs=EPOCHS, callbacks = [checkpoint])
+
+# summarize history for accuracy
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'validation'], loc='upper left')
+plt.savefig('Training_Accuracy.png')
+plt.clf()
+
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'validation'], loc='upper left')
+plt.savefig('Training_Loss.png')
+plt.clf()
