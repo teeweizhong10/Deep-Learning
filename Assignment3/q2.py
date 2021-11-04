@@ -21,7 +21,7 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.python.keras import layers
 
-EPOCHS=100
+EPOCHS=50
 BATCH_SIZE=32
 HEIGHT=128
 WIDTH=128
