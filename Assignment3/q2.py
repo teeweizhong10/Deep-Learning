@@ -128,6 +128,7 @@ image = imgs[0]
 mask = give_color_to_seg_img(segs[0])
 masked_image = image * 0.5 + mask * 0.5
 
+'''
 fig, axs = plt.subplots(1, 3, figsize=(20,20))
 axs[0].imshow(image)
 axs[0].set_title('Original Image')
@@ -137,6 +138,34 @@ axs[1].set_title('Segmentation Mask')
 axs[2].imshow(masked_image)
 axs[2].set_title('Masked Image')
 plt.show()
+'''
+
+
+class Augment(tf.keras.layers.Layer):
+    def __init__(self, seed=42):
+        super().__init__()
+        # both use the same seed, so they'll make the same random changes.
+        self.augment_inputs = preprocessing.RandomFlip(mode="horizontal", seed=seed)
+        self.augment_labels = preprocessing.RandomFlip(mode="horizontal", seed=seed)
+
+    def call(self, inputs, labels):
+        inputs = self.augment_inputs(inputs)
+        labels = self.augment_labels(labels)
+        return inputs, labels
+
+BATCH_SIZE = 64
+BUFFER_SIZE = 1000
+
+train_batches = (
+    train_gen
+    .cache()
+    .shuffle(BUFFER_SIZE)
+    .batch(BATCH_SIZE)
+    .repeat()
+    .map(Augment())
+    .prefetch(buffer_size=tf.data.AUTOTUNE))
+
+test_batches = val_gen.batch(BATCH_SIZE)
 
 def normalize(input_image, input_mask):
   input_image = tf.cast(input_image, tf.float32) / 255.0
@@ -279,7 +308,7 @@ VAL_STEPS = len(val_gen)
 checkpoint = ModelCheckpoint('seg_model.h5', monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=True)
 
 model.compile(optimizer="adam", loss='sparse_categorical_crossentropy', metrics=["acc"])
-history = model.fit(train_gen, validation_data=val_gen, steps_per_epoch=TRAIN_STEPS, 
+history = model.fit(train_batches, validation_data=test_batches, steps_per_epoch=TRAIN_STEPS,
           validation_steps=VAL_STEPS, epochs=EPOCHS, callbacks = [checkpoint])
 
 # summarize history for accuracy
@@ -433,7 +462,7 @@ VAL_STEPS = len(val_gen)
 checkpoint = ModelCheckpoint('seg_model.h5', monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=True)
 
 model.compile(optimizer="adam", loss='sparse_categorical_crossentropy', metrics=["acc"])
-history = model.fit(train_gen, validation_data=val_gen, steps_per_epoch=TRAIN_STEPS,
+history = model.fit(train_batches, validation_data=test_batches, steps_per_epoch=TRAIN_STEPS,
           validation_steps=VAL_STEPS, epochs=EPOCHS, callbacks = [checkpoint])
 
 # summarize history for accuracy
