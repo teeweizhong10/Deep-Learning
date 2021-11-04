@@ -68,8 +68,8 @@ def give_color_to_seg_img(seg, n_classes=N_CLASSES):
 
     return(seg_img)
 
-train_folder = 'data/groups/gomesr/DeepL_CS491/Cityscapes/train'
-valid_folder = 'data/groups/gomesr/DeepL_CS491/Cityscapes/val'
+train_folder = '/data/groups/gomesr/DeepL_CS491/Cityscapes/train'
+valid_folder = '/data/groups/gomesr/DeepL_CS491/Cityscapes/val'
 
 train_filenames = glob.glob(os.path.join(train_folder, "*.jpg"))
 valid_filenames = glob.glob(os.path.join(valid_folder, "*.jpg"))
