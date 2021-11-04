@@ -3,7 +3,7 @@
 #SBATCH --time=15:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --nodelist=gpu02
+#SBATCH --nodelist=gpu03
 #SBATCH --mem=20G
 #SBATCH --job-name="Deep_Learning_Q2_3"
 #SBATCH --output=q2out3.out
