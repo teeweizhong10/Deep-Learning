@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --partition=GPU
-#SBATCH --time=10:00:00
+#SBATCH --time=15:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --nodelist=gpu02
 #SBATCH --mem=20G
-#SBATCH --job-name="Deep_Learning_Q2"
-#SBATCH --output=q2out.out
-#SBATCH --error=q2err.err
+#SBATCH --job-name="Deep_Learning_Q2_1"
+#SBATCH --output=q2out1.out
+#SBATCH --error=q2err1.err
 #SBATCH --mail-user=teewz1076@UWEC.EDU
 #SBATCH --mail-type=END
 
