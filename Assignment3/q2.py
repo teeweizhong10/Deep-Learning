@@ -20,6 +20,7 @@ from PIL import Image
 from tensorflow.keras.layers import *
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.python.keras import layers
+from tensorflow.keras import layers
 
 EPOCHS = 50
 BATCH_SIZE = 32
