@@ -30,6 +30,7 @@ CHANNELS = 3
 N_CLASSES = 13
 AUTO = tf.data.AUTOTUNE
 
+'''
 resize_and_rescale = tf.keras.Sequential([
   tf.keras.layers.Resizing(HEIGHT, WIDTH),
   tf.keras.layers.Rescaling(1./255)
@@ -39,6 +40,8 @@ data_augmentation = tf.keras.Sequential([
   tf.keras.layers.RandomFlip("horizontal_and_vertical"),
   tf.keras.layers.RandomRotation(0.2),
 ])
+'''
+
 
 def loadImage(path):
     img = Image.open(path)
@@ -48,11 +51,11 @@ def loadImage(path):
     image = image / 255.0
     mask = img[:, 256:]
 
-    input_image = resize_and_rescale(image)
-    input_image = data_augmentation(image)
+    #input_image = resize_and_rescale(image)
+    #input_image = data_augmentation(image)
 
-    input_mask = resize_and_rescale(mask)
-    input_mask = data_augmentation(mask)
+    #input_mask = resize_and_rescale(mask)
+    #input_mask = data_augmentation(mask)
 
     input_image = tf.image.resize(image, (128, 128))
     input_mask = tf.image.resize(mask, (128, 128))
