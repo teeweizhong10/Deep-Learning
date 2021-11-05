@@ -151,7 +151,6 @@ resize_and_rescale = tf.keras.Sequential([
 ])
 
 data_augmentation = tf.keras.Sequential([
-  layers.RandomFlip("horizontal_and_vertical"),
   layers.RandomRotation(0.2),
 ])
 
