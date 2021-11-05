@@ -30,6 +30,15 @@ CHANNELS = 3
 N_CLASSES = 13
 AUTO = tf.data.AUTOTUNE
 
+resize_and_rescale = tf.keras.Sequential([
+  tf.keras.layers.Resizing(HEIGHT, WIDTH),
+  tf.keras.layers.Rescaling(1./255)
+])
+
+data_augmentation = tf.keras.Sequential([
+  tf.keras.layers.RandomFlip("horizontal_and_vertical"),
+  tf.keras.layers.RandomRotation(0.2),
+])
 
 def loadImage(path):
     img = Image.open(path)
@@ -38,6 +47,12 @@ def loadImage(path):
     image = img[:, :256]
     image = image / 255.0
     mask = img[:, 256:]
+
+    input_image = resize_and_rescale(image)
+    input_image = data_augmentation(image)
+
+    input_mask = resize_and_rescale(mask)
+    input_mask = data_augmentation(mask)
 
     input_image = tf.image.resize(image, (128, 128))
     input_mask = tf.image.resize(mask, (128, 128))
@@ -135,6 +150,7 @@ image = imgs[0]
 mask = give_color_to_seg_img(segs[0])
 masked_image = image * 0.5 + mask * 0.5
 
+'''
 fig, axs = plt.subplots(1, 3, figsize=(20, 20))
 axs[0].imshow(image)
 axs[0].set_title('Original Image')
@@ -144,16 +160,7 @@ axs[1].set_title('Segmentation Mask')
 axs[2].imshow(masked_image)
 axs[2].set_title('Masked Image')
 plt.show()
-
-resize_and_rescale = tf.keras.Sequential([
-  tf.keras.layers.Resizing(HEIGHT, WIDTH),
-  tf.keras.layers.layers.Rescaling(1./255)
-])
-
-data_augmentation = tf.keras.Sequential([
-  tf.keras.layers.layers.RandomFlip("horizontal_and_vertical"),
-  tf.keras.layers.layers.RandomRotation(0.2),
-])
+'''
 
 
 def normalize(input_image, input_mask):
@@ -164,8 +171,6 @@ def normalize(input_image, input_mask):
 
 def unet_model(output_channels: int):
     # The encoder
-    resize_and_rescale
-    data_augmentation
     encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
     f = [32, 64, 128, 256, 512]
     kernel_size = (3, 3)
@@ -317,8 +322,6 @@ plt.clf()
 
 def resunet_model(output_channels: int):
     # The encoder
-    resize_and_rescale
-    data_augmentation
     encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
     f = [32, 64, 128, 256, 512]
     kernel_size = (3, 3)
