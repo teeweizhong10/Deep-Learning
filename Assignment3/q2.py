@@ -146,12 +146,13 @@ axs[2].set_title('Masked Image')
 plt.show()
 
 resize_and_rescale = tf.keras.Sequential([
-  layers.Resizing(HEIGHT, WIDTH),
-  layers.Rescaling(1./255)
+  tf.keras.layers.Resizing(HEIGHT, WIDTH),
+  tf.keras.layers.layers.Rescaling(1./255)
 ])
 
 data_augmentation = tf.keras.Sequential([
-  layers.RandomRotation(0.2),
+  tf.keras.layers.layers.RandomFlip("horizontal_and_vertical"),
+  tf.keras.layers.layers.RandomRotation(0.2),
 ])
 
 
