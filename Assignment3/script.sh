@@ -6,7 +6,7 @@
 #SBATCH --nodelist=gpu02
 #SBATCH --gpus=1
 #SBATCH --mem=20G
-#SBATCH --job-name="Deep_Learning_Q2New"
+#SBATCH --job-name="Deep_Learning_Q2"
 #SBATCH --output=q2outNew.out
 #SBATCH --error=q2errNew.err
 #SBATCH --mail-user=teewz1076@UWEC.EDU

@@ -144,6 +144,11 @@ axs[2].imshow(masked_image)
 axs[2].set_title('Masked Image')
 plt.show()
 
+data_augmentation = tf.keras.Sequential([
+  layers.RandomFlip("horizontal_and_vertical"),
+  layers.RandomRotation(0.2),
+])
+
 
 def normalize(input_image, input_mask):
     input_image = tf.cast(input_image, tf.float32) / 255.0
@@ -153,7 +158,7 @@ def normalize(input_image, input_mask):
 
 def unet_model(output_channels: int):
     # The encoder
-    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
+    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3]) (data_augmentation)
     f = [32, 64, 128, 256, 512]
     kernel_size = (3, 3)
     strides = 1
@@ -269,18 +274,6 @@ model.compile(optimizer='adam',
 
 # tf.keras.utils.plot_model(model, show_shapes=True)
 
-class Augment(tf.keras.layers.Layer):
-    def __init__(self, seed=42):
-        super().__init__()
-        # both use the same seed, so they'll make the same random changes.
-        self.augment_inputs = preprocessing.RandomFlip(mode="horizontal", seed=seed)
-        self.augment_labels = preprocessing.RandomFlip(mode="horizontal", seed=seed)
-
-    def call(self, inputs, labels):
-        inputs = self.augment_inputs(inputs)
-        labels = self.augment_labels(labels)
-        return inputs, labels
-
 
 TRAIN_STEPS = len(train_gen)
 VAL_STEPS = len(val_gen)
@@ -316,7 +309,7 @@ plt.clf()
 
 def resunet_model(output_channels: int):
     # The encoder
-    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
+    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3]) (data_augmentation)
     f = [32, 64, 128, 256, 512]
     kernel_size = (3, 3)
     strides = 1
