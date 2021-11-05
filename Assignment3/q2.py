@@ -159,7 +159,8 @@ def normalize(input_image, input_mask):
 
 def unet_model(output_channels: int):
     # The encoder
-    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3]) (data_augmentation)
+    data_augmentation
+    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
     f = [32, 64, 128, 256, 512]
     kernel_size = (3, 3)
     strides = 1
@@ -310,7 +311,8 @@ plt.clf()
 
 def resunet_model(output_channels: int):
     # The encoder
-    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3]) (data_augmentation)
+    data_augmentation
+    encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
     f = [32, 64, 128, 256, 512]
     kernel_size = (3, 3)
     strides = 1
