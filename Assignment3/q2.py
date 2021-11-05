@@ -145,6 +145,11 @@ axs[2].imshow(masked_image)
 axs[2].set_title('Masked Image')
 plt.show()
 
+resize_and_rescale = tf.keras.Sequential([
+  layers.Resizing(HEIGHT, WIDTH),
+  layers.Rescaling(1./255)
+])
+
 data_augmentation = tf.keras.Sequential([
   layers.RandomFlip("horizontal_and_vertical"),
   layers.RandomRotation(0.2),
@@ -159,6 +164,7 @@ def normalize(input_image, input_mask):
 
 def unet_model(output_channels: int):
     # The encoder
+    resize_and_rescale
     data_augmentation
     encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
     f = [32, 64, 128, 256, 512]
@@ -311,6 +317,7 @@ plt.clf()
 
 def resunet_model(output_channels: int):
     # The encoder
+    resize_and_rescale
     data_augmentation
     encoder_inputs = tf.keras.layers.Input(shape=[128, 128, 3])
     f = [32, 64, 128, 256, 512]
